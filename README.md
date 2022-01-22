@@ -8,8 +8,8 @@ Streem Persian Music with Recommender System
 Our goal is to build an application that users can listen music & our app recommend songs by their current mood
 
 ## Tools
-[![Radio Javan CLient API](https://github.com/xHossein/radiojavanapi/)
+![Radio Javan CLient API](https://github.com/xHossein/radiojavanapi/)
 
-[![Annoy Approximate Nearest Neighbors](https://github.com/spotify/annoy)
+![Annoy Approximate Nearest Neighbors](https://github.com/spotify/annoy)
 
-[![Audio Embedding Generator](https://github.com/IBM/MAX-Audio-Embedding-Generator)
+![Audio Embedding Generator](https://github.com/IBM/MAX-Audio-Embedding-Generator)
