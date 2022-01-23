@@ -7,4 +7,3 @@ musics_rj/
 .dockerignore
 /audio-embedding/assets/vggish_model.ckpt
 /audio-embedding/assets/vggish_pca_params.npz
-/.git
