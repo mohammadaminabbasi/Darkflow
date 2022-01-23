@@ -1,0 +1,10 @@
+__pycache__
+*.pyc
+db.sqlite3
+venv/
+musics_rj/
+.idea/
+.dockerignore
+/audio-embedding/assets/vggish_model.ckpt
+/audio-embedding/assets/vggish_pca_params.npz
+/.git
