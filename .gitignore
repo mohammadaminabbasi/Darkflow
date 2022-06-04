@@ -1,0 +1,11 @@
+__pycache__
+*.pyc
+db.sqlite3
+venv/
+ven/
+nlp/
+.idea/
+.dockerignore
+audio_embedding/
+musics_rj/
+recommend/
