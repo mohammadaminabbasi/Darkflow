@@ -11,7 +11,7 @@ class DFSong(models.Model):
     songUrl = models.URLField()
     imageUrl = models.URLField()
     lyric = models.TextField(null=True)
-    # likes = models.IntegerField(default=0)
+    likes = models.IntegerField(default=0)
     genre = models.CharField(max_length=100, default="")
 
     def __str__(self):
@@ -32,6 +32,13 @@ class SongComments(models.Model):
 
 
 class SongComments1(models.Model):
+    id = models.AutoField(primary_key=True)
+    song_id = models.CharField(max_length=250)
+    user_id = models.CharField(max_length=250)
+    comment = models.CharField(max_length=250)
+
+
+class SongComments2(models.Model):
     id = models.AutoField(primary_key=True)
     song_id = models.CharField(max_length=250)
     user_id = models.CharField(max_length=250)

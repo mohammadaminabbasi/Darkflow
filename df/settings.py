@@ -66,22 +66,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'df.wsgi.application'
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'd2pg699qmikucj',
-    #     'USER': 'pgwuseahaeskbs',
-    #     'PASSWORD': '742789e6210b88e34bdefc6e827f1592e9f48534992f8e3d4e12459e2a06522a',
-    #     'HOST': 'ec2-54-247-96-153.eu-west-1.compute.amazonaws.com',
-    #     'PORT': '5432',
-    # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'darkflow',
-        'USER': 'koalamin',
-        'PASSWORD': 'Apple1378',
-        'HOST': 'localhost',
+        'NAME': 'd2pg699qmikucj',
+        'USER': 'pgwuseahaeskbs',
+        'PASSWORD': '742789e6210b88e34bdefc6e827f1592e9f48534992f8e3d4e12459e2a06522a',
+        'HOST': 'ec2-54-247-96-153.eu-west-1.compute.amazonaws.com',
         'PORT': '5432',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'darkflow',
+    #     'USER': 'koalamin',
+    #     'PASSWORD': 'Apple1378',
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',
+    # }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
