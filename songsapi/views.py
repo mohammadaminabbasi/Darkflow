@@ -94,11 +94,12 @@ def hiphop_popular(request):
 # @permission_classes((IsAuthenticated,))
 # @cache_page(60 * 60 * 24)  # 24 hour cache
 def related_artist(request):
-    popular_artists = rj_client.get_popular_artists()[0:10]
+    popular_artists = rj_client.get_popular_artists()
     artists_map = []
-    for artist in popular_artists:
-        dfartist = rjartist_to_dfartist(artist)
-        artists_map.append(artist_to_map(dfartist))
+    if popular_artists is not None:
+        for artist in popular_artists[0:10]:
+            dfartist = rjartist_to_dfartist(artist)
+            artists_map.append(artist_to_map(dfartist))
 
     return DFResponse(data=artists_map, is_successful=True)
 
