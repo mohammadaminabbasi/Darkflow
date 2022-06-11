@@ -7,5 +7,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name="home"),
     path('songsapi/', include('songsapi.urls')),
+    path('user_activity/', include('user_activity.urls')),
     path('auth/', include('auth.urls')),
 ]

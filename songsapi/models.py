@@ -18,33 +18,6 @@ class DFSong(models.Model):
         return self.title
 
 
-class SongLikes(models.Model):
-    id = models.AutoField(primary_key=True)
-    song_id = models.CharField(max_length=250)
-    user_id = models.CharField(max_length=250)
-
-
-class SongComments(models.Model):
-    id = models.AutoField(primary_key=True)
-    song_id = models.CharField(max_length=250)
-    user_id = models.CharField(max_length=250)
-    comment = models.CharField(max_length=250)
-
-
-class SongComments1(models.Model):
-    id = models.AutoField(primary_key=True)
-    song_id = models.CharField(max_length=250)
-    user_id = models.CharField(max_length=250)
-    comment = models.CharField(max_length=250)
-
-
-class SongComments2(models.Model):
-    id = models.AutoField(primary_key=True)
-    song_id = models.CharField(max_length=250)
-    user_id = models.CharField(max_length=250)
-    comment = models.CharField(max_length=250)
-
-
 class DFArtist(models.Model):
     name = models.CharField(primary_key=True, max_length=1000)
     imageUrl = models.URLField()

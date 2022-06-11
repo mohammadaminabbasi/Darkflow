@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'songsapi.apps.SongApiConfig',
+    'user_activity.apps.UserActivityConfig',
     # 'recommend.apps.RecommendConfig',
     'rest_framework_simplejwt',
 ]

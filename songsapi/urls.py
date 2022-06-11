@@ -15,9 +15,6 @@ urlpatterns = [
     path('hiphop_popular/', hiphop_popular, name="hiphop_popular_songs"),
     path('related_artists/', related_artist, name="related_artists"),
     path('songs/', get_songs_of_artist, name="songs"),
-    path('like_song/', like_song, name="like_song"),
-    path('unlike_song/', unlike_song, name="unlike_song"),
-    path('comment_song/', comment_song, name="comment_song"),
     path('get_recommended_songs/', get_recommended_songs, name="get_recommended_songs"),
     path('init_data/', init_rec_date, name="init_rec_date"),
 ]

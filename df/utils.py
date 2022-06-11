@@ -1,8 +1,10 @@
 from radiojavanapi import Client
 from radiojavanapi.models import Song, Artist
 
-from songsapi.models import DFSong, DFArtist
+from songsapi.models import *
 from finglish import f2p
+
+from user_activity.models import *
 
 
 def rjsong_to_dfsong(song: Song):
@@ -52,6 +54,19 @@ def artist_to_map(artist: DFArtist):
         "imageUrl": str(artist.imageUrl),
     }
     return song_map
+
+
+def comments_to_map(comments: [SongComments]):
+    maps = []
+    for comment in comments:
+        map = {
+            "id": str(comment.id),
+            "song_id": str(comment.song_id),
+            "user_id": str(comment.user_id),
+            "comment": str(comment.comment),
+        }
+        maps.append(map)
+    return maps
 
 
 def convert_finglish_to_persian(finglish: str):
