@@ -1,3 +1,5 @@
+import re
+
 from radiojavanapi import Client
 from radiojavanapi.models import Song, Artist
 
@@ -10,9 +12,11 @@ from user_activity.models import *
 def rjsong_to_dfsong(song: Song):
     dfsong = DFSong()
     dfsong.id = song.id
-    dfsong.title = song.name
-    dfsong.artist = song.artist
+    dfsong.title = re.sub(r'\([^()]*\)', '', song.name)
+    dfsong.artist = str(song.artist_tags)
+    print(str(dfsong.artist))
     dfsong.songUrl = song.link
+    dfsong.likes = song.likes
     dfsong.imageUrl = song.photo
     dfsong.lyric = song.lyric
     return dfsong
@@ -25,7 +29,7 @@ def rjartist_to_dfartist(artist: Artist):
     return dfartist
 
 
-def rjsong_to_map(song: Song):
+def song_rj_to_map(song: Song):
     song_map = {
         "id": str(song.id),
         "title": str(convert_finglish_to_persian(song.name)),
@@ -64,6 +68,19 @@ def comments_to_map(comments: [SongComments]):
             "song_id": str(comment.song_id),
             "user_id": str(comment.user_id),
             "comment": str(comment.comment),
+        }
+        maps.append(map)
+    return maps
+
+
+def song_listens_to_map(song_listens: [SongListens]):
+    maps = []
+    for song_listen in song_listens:
+        map = {
+            "id": str(song_listen.id),
+            "song_id": str(song_listen.song_id),
+            "user_id": str(song_listen.user_id),
+            "count": str(song_listen.count),
         }
         maps.append(map)
     return maps

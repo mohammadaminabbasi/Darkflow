@@ -1,0 +1,14 @@
+###
+GET http://127.0.0.1:8000/run/
+
+###
+GET http://127.0.0.1:8000/songsapi/popular_songs/
+
+###
+GET http://127.0.0.1:8000/songsapi/traditional_popular/
+
+###
+GET http://127.0.0.1:8000/songsapi/local/
+
+###
+GET http://127.0.0.1:8000/user_activity/recommended_artists/

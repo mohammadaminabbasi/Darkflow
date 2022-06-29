@@ -42,3 +42,30 @@ def get_all_song_comments(request):
     song_id = request.GET.get('song_id', None)
     comments = SongComments.objects.filter(song_id=song_id)
     return DFResponse(data=comments_to_map(comments), is_successful=True)
+
+
+def add_new_song_listen(request):
+    song_id = request.GET.get('song_id', None)
+    user_id = request.GET.get('user_id', None)
+    print(type(request))
+    if SongListens.objects.filter(song_id=song_id, user_id=user_id).exists():
+        song_listen = SongListens.objects.filter(song_id=song_id, user_id=user_id)[0]
+        song_listen.count = song_listen.count + 1
+        song_listen.save()
+    else:
+        SongListens(song_id=song_id, user_id=user_id, count=0).save()
+    return DFResponse(message="Song Listens submitted", is_successful=True)
+
+
+def most_listened_artists(request):
+    result_map_list = {}
+    for song_listen_record in SongListens.objects.all():
+        artist = DFSong.objects.filter(id=song_listen_record.song_id).get().artist \
+            .replace("[", "").replace("]", "").replace("'", "")
+
+        if artist in result_map_list:
+            result_map_list[artist] = result_map_list[artist] + 1
+        else:
+            result_map_list[artist] = 1
+
+    return DFResponse(data=result_map_list, message="Song Listens submitted", is_successful=True)

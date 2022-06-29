@@ -1,8 +1,10 @@
 import os
+from pathlib import Path
 
 import django_heroku
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = '3cJfz/TwjH4MZkePRDVAyA7sFfiQPNADk+CJGqO+vH0='
 
@@ -12,6 +14,11 @@ SITE_ID = 1
 
 ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = ["http://0.0.0.0:8000", "https://darkflow1.herokuapp.com"]
+
+"""Audio Field"""
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -51,7 +58,8 @@ SETTINGS_PATH = os.path.dirname(os.path.dirname(__file__))
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(SETTINGS_PATH, 'templates')],
+        # 'DIRS': [os.path.join(SETTINGS_PATH, 'templates')],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
