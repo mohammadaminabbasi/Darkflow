@@ -3,6 +3,7 @@ from django.shortcuts import render
 
 from df.DFResponse import DFResponse
 from songsapi.ArtistEdge import ArtistEdge
+from songsapi.views import get_all_home_page_data
 
 
 def home(request):
@@ -10,9 +11,7 @@ def home(request):
 
 
 def run(request):
-    for rec_raw in ArtistEdge.objects.all():
-        if rec_raw.artist1 == rec_raw.artist2:
-            rec_raw.delete()
+    get_all_home_page_data(request)
     return DFResponse(message="Home12", is_successful=True)
 
 

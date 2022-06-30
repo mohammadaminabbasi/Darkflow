@@ -1,9 +1,11 @@
-from rest_framework.decorators import permission_classes, api_view
 from django.views.decorators.cache import cache_page
+from rest_framework.decorators import api_view
 
 from df.DFResponse import DFResponse
+from songsapi.recommend_views import get_general_recommended_unlistened_songs, most_played_artists, \
+    get_listened_playlist
 from songsapi.static_database_utils import get_df_songs_of_artist
-from tools.StopWords import StopWords
+from songsapi.translate_utlis import *
 
 from df.utils import *
 
@@ -11,10 +13,7 @@ rj_client = Client()
 is_online_mode = False
 
 
-@api_view(['GET'])
-# @permission_classes((IsAuthenticated,))
-@cache_page(60 * 60 * 24)  # 24 hour cache
-def all_popular_songs(request):
+def all_popular_songs():
     result_map_list = []
 
     if is_online_mode:
@@ -29,13 +28,10 @@ def all_popular_songs(request):
         for song in songs:
             result_map_list.append(song_df_to_map(song))
 
-    return DFResponse(data=result_map_list, is_successful=True)
+    return result_map_list
 
 
-@api_view(['GET'])
-# @permission_classes((IsAuthenticated,))
-@cache_page(60 * 60 * 24)  # 24 hour cache
-def traditional_popular_songs(request):
+def traditional_popular_songs():
     result_map_list = []
 
     if is_online_mode:
@@ -53,12 +49,9 @@ def traditional_popular_songs(request):
         for song in songs:
             result_map_list.append(song_df_to_map(song))
 
-    return DFResponse(data=result_map_list, is_successful=True)
+    return result_map_list
 
 
-@api_view(['GET'])
-# @permission_classes((IsAuthenticated,))
-@cache_page(60 * 60 * 24)  # 24 hour cache
 def pop_popular_songs(request):
     result_map_list = []
 
@@ -83,8 +76,20 @@ def get_songs_of_artist(request):
     return DFResponse(data=result, is_successful=True)
 
 
-def insert_song(song: DFSong):
-    stop_words = StopWords()
-    if not DFSong.objects.filter(pk=song.id).exists():
-        song.lyric = stop_words.remove_stop_words_of_sentences(song.lyric if song.lyric is not None else "")
-        song.save()
+@api_view(['GET'])
+# @permission_classes((IsAuthenticated,))
+@cache_page(60 * 60 * 24)  # 24 hour cache
+def get_all_home_page_data(request):
+    user_id = request.GET.get('user_id', None)
+    result = []
+    popular_songs = all_popular_songs()
+    result.append({"type": "song", "name": translate_popular_songs, "data": popular_songs})
+    recommended_artists = most_played_artists(user_id)
+    result.append({"type": "artist", "name": translate_rec_artists, "data": recommended_artists})
+    recommended_songs = get_general_recommended_unlistened_songs(user_id)
+    result.append({"type": "song", "name": translate_rec_songs, "data": recommended_songs})
+    traditional_songs = traditional_popular_songs()
+    result.append({"type": "song", "name": translate_traditional_popular_songs, "data": traditional_songs})
+    history_playlist = get_listened_playlist(user_id)
+    result.append({"type": "song", "name": translate_history_playlist, "data": history_playlist})
+    return DFResponse(data=result, is_successful=True)
