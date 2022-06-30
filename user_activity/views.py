@@ -69,3 +69,4 @@ def most_listened_artists(request):
             result_map_list[artist] = 1
 
     return DFResponse(data=result_map_list, message="Song Listens submitted", is_successful=True)
+

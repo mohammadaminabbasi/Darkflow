@@ -16,40 +16,30 @@ from user_activity.models import SongListens
 
 
 def get_recommended_songs(request):
-    song_id = request.GET.get('song_id', None)
-    if song_id is None:
-        all_popular_songs(request)
-    import logging
-    logger = logging.getLogger('testlogger')
-    logger.info("song_id")
-    logger.info(song_id)
-    print("song_id")
-    print(song_id)
-    if song_id is not None:
-        suggested_songs_map = []
-        if RecommendedSongs.objects.filter(song_id=song_id).exists():
-            recommended_songs = RecommendedSongs.objects.get(song_id=song_id)
-            print(str(recommended_songs.recommends_songs_id).strip("{}").split(","))
-            for recommended_song_id in str(recommended_songs.recommends_songs_id).strip("{}").split(","):
-                if DFSong.objects.filter(id=recommended_song_id).exists():
-                    df_song = DFSong.objects.get(id=recommended_song_id)
-                    suggested_songs_map.append(song_df_to_map(df_song))
-                else:
-                    return all_popular_songs(request)
-
-            return DFResponse(data=suggested_songs_map, is_successful=True)
-        else:
-            return all_popular_songs(request)
+    result = []
+    requested_song_id = request.GET.get('song_id', None)
+    df_song = get_df_song_by_id(requested_song_id)
+    recommended_songs_id = RecommendedSongs.objects.filter(song=df_song)
+    if len(recommended_songs_id) > 0:
+        for song_id in recommended_songs_id[0].recommends_songs_id:
+            result.append(song_df_to_map(get_df_song_by_id(song_id)))
     else:
         return all_popular_songs(request)
+    return DFResponse(data=result, is_successful=True)
 
 
 def get_listened_playlist(request):
+    result = []
     user_id = request.GET.get('user_id', None)
     song_listened_list = SongListens.objects.filter(user_id=user_id)
     count_listened = [song_listens.count for song_listens in song_listened_list]
-    result = set(random.choices(song_listened_list, weights=tuple(count_listened), k=10))
-    return DFResponse(data=song_listens_to_map(result), is_successful=True)
+    song_listens = set(random.choices(song_listened_list, weights=tuple(count_listened), k=10))
+    for song_id in song_listens:
+        print(song_id.song_id)
+        df_song = get_df_song_by_id(song_id.song_id)
+        if df_song is not None:
+            result.append(song_df_to_map(df_song))
+    return DFResponse(data=result, is_successful=True)
 
 
 def get_general_recommended_unlistened_songs(request):
@@ -61,7 +51,7 @@ def get_general_recommended_unlistened_songs(request):
     print(listened_playlist)
     for song_listened in listened_playlist:
         print(song_listened.song_id)
-        df_song = DFSong.objects.filter(id=song_listened.song_id)[0]
+        df_song = get_df_song_by_id(song_listened.song_id)
         rec_songs = RecommendedSongs.objects.filter(song=df_song)[0]
         rec_list = rec_list.union(set(random.choices(rec_songs.recommends_songs_id[1:], k=2)))
     df_songs = [song_df_to_map(get_df_song_by_id(song_id)) for song_id in rec_list]
@@ -70,20 +60,20 @@ def get_general_recommended_unlistened_songs(request):
 
 def most_played_artists(request):
     user_id = request.GET.get('user_id', None)
-    most_played_artists = {}
+    most_played_artists_list = {}
     song_listened_list = SongListens.objects.filter(user_id=user_id).order_by('count')
     for song in song_listened_list[:5]:
-        df_song = DFSong.objects.filter(id=song.song_id)[0]
+        df_song = get_df_song_by_id(song.song_id)
         artist = literal_eval(df_song.artist)[0]
         print(artist)
 
-        if artist in most_played_artists:
-            most_played_artists[artist] += 1
+        if artist in most_played_artists_list:
+            most_played_artists_list[artist] += 1
         else:
-            most_played_artists[artist] = 1
+            most_played_artists_list[artist] = 1
 
-    print(most_played_artists)
-    sorted_most_played_artists = dict(reversed(sorted(most_played_artists.items(), key=lambda item: item[1])))
+    print(most_played_artists_list)
+    sorted_most_played_artists = dict(reversed(sorted(most_played_artists_list.items(), key=lambda item: item[1])))
     print(list(sorted_most_played_artists.keys()))
     return DFResponse(data=list(sorted_most_played_artists.keys()), is_successful=False)
 

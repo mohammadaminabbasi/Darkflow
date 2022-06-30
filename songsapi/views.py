@@ -2,6 +2,7 @@ from rest_framework.decorators import permission_classes, api_view
 from django.views.decorators.cache import cache_page
 
 from df.DFResponse import DFResponse
+from songsapi.static_database_utils import get_df_songs_of_artist
 from tools.StopWords import StopWords
 
 from df.utils import *
@@ -78,13 +79,8 @@ def pop_popular_songs(request):
 
 def get_songs_of_artist(request):
     artist = request.GET.get('artist', None)
-    print(artist)
-    rj_artist = rj_client.get_artist_by_name(artist)
-    songs_map = []
-    for song in rj_artist.songs[0:10]:
-        songs_map.append(song_rj_to_map(rj_client.get_song_by_id(song.id)))
-
-    return DFResponse(data=songs_map, is_successful=True)
+    result = get_df_songs_of_artist(artist)
+    return DFResponse(data=result, is_successful=True)
 
 
 def insert_song(song: DFSong):

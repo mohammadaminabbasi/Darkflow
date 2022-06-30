@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 
@@ -19,3 +20,10 @@ class SongListens(models.Model):
     song_id = models.CharField(max_length=250)
     user_id = models.CharField(max_length=250)
     count = models.IntegerField(default=1)
+
+
+class PlayList(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=250)
+    user_id = models.CharField(max_length=250)
+    songs_id = ArrayField(models.CharField(max_length=250))

@@ -31,7 +31,7 @@ class DFArtist(models.Model):
 
 
 class RecommendedSongs(models.Model):
-    song = models.ForeignKey(DFSong, on_delete=models.CASCADE, primary_key=True)
+    song = models.OneToOneField(DFSong, on_delete=models.CASCADE, primary_key=True)
     recommends_songs_id = ArrayField(models.CharField(max_length=250))
 
 
@@ -50,9 +50,3 @@ class ArtistEdge(models.Model):
     def __str__(self):
         return f"({self.artist1}) , ({self.artist2}) , {self.weight}"
 
-
-class AudioStore(models.Model):
-    record = models.FileField(upload_to='audio/')
-
-    class Meta:
-        db_table = 'Audio_store'

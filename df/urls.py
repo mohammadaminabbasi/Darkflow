@@ -11,5 +11,6 @@ urlpatterns = [
     path('run/', run, name="home"),
     path('songsapi/', include('songsapi.urls')),
     path('user_activity/', include('user_activity.urls')),
+    path('playlist/', include('user_activity.playlist_urls')),
     path('auth/', include('auth.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

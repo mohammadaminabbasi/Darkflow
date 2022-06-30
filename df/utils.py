@@ -1,4 +1,5 @@
 import re
+from ast import literal_eval
 
 from radiojavanapi import Client
 from radiojavanapi.models import Song, Artist
@@ -44,7 +45,7 @@ def song_df_to_map(song: DFSong):
     song_map = {
         "id": str(song.id),
         "title": str(convert_finglish_to_persian(song.title)),
-        "artist": str(convert_finglish_to_persian(song.artist)),
+        "artist": literal_eval(song.artist),
         "songUrl": str(song.songUrl),
         "imageUrl": str(song.imageUrl),
     }
