@@ -6,7 +6,7 @@ from songsapi.ArtistEdge import Graph
 from songsapi.models import *
 
 from df.utils import *
-from songsapi.static_database_utils import get_df_song_by_id
+from songsapi.static_database_utils import get_df_song_by_id, get_artist
 from user_activity.models import SongListens
 
 
@@ -50,6 +50,7 @@ def get_general_recommended_unlistened_songs(user_id):
 
 
 def most_played_artists(user_id):
+    result = []
     most_played_artists_list = {}
     song_listened_list = SongListens.objects.filter(user_id=user_id).order_by('count')
     for song in song_listened_list[:10]:
@@ -62,10 +63,11 @@ def most_played_artists(user_id):
         else:
             most_played_artists_list[artist] = 1
 
-    print(most_played_artists_list)
-    sorted_most_played_artists = dict(reversed(sorted(most_played_artists_list.items(), key=lambda item: item[1])))
-    print(list(sorted_most_played_artists.keys()))
-    return list(sorted_most_played_artists.keys())
+    sorted_most_played_artists = list(
+        dict(reversed(sorted(most_played_artists_list.items(), key=lambda item: item[1]))).keys())
+
+    result = [get_artist(artist1) for artist1 in sorted_most_played_artists if get_artist(artist1) is not None]
+    return result
 
 
 def insert_artist_edges():

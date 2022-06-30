@@ -26,7 +26,7 @@ def rjsong_to_dfsong(song: Song):
 def rjartist_to_dfartist(artist: Artist):
     dfartist = DFArtist()
     dfartist.name = artist.name
-    dfartist.imageUrl = artist.photo
+    dfartist.image_url = artist.photo
     return dfartist
 
 
@@ -56,7 +56,7 @@ def artist_to_map(artist: DFArtist):
     song_map = {
         "en_name": str(artist.name),
         "fa_name": str(convert_finglish_to_persian(artist.name)),
-        "imageUrl": str(artist.imageUrl),
+        "imageUrl": str(artist.image_url),
     }
     return song_map
 

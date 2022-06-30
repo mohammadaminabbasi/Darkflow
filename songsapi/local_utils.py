@@ -1,11 +1,12 @@
 import glob, os
+from ast import literal_eval
 
 from radiojavanapi import Client
 
 from df.DFResponse import DFResponse
 from df.utils import rjsong_to_dfsong
-from songsapi.models import SongGenre, DFSong
-from songsapi.views import insert_song
+from songsapi.models import SongGenre, DFSong, DFArtist
+from songsapi.static_database_utils import all_songs
 
 
 def import_pop_music_to_database():
@@ -25,7 +26,16 @@ def import_pop_music_to_database():
             rj_song = client.get_song_by_id(file.replace(".mp3", ""))
             df_song = rjsong_to_dfsong(rj_song)
             # df_song.genre = SongGenre.pop
-            insert_song(df_song)
             print(file)
 
     return DFResponse(data="", is_successful=True)
+
+
+def import_artists_to_db():
+    client = Client()
+    for i, song in enumerate(all_songs):
+        print(f"{i}/{len(all_songs)}")
+        for artist in literal_eval(song.artist):
+            if not DFArtist.objects.filter(name=artist).exists():
+                rj_artist = client.get_artist_by_name(artist)
+                DFArtist(name=artist, imageUrl=rj_artist.photo).save()

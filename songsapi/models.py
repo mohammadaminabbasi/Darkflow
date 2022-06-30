@@ -24,7 +24,7 @@ class DFSong(models.Model):
 
 class DFArtist(models.Model):
     name = models.CharField(primary_key=True, max_length=1000)
-    imageUrl = models.URLField()
+    image_url = models.URLField()
 
     def __str__(self):
         return self.name
