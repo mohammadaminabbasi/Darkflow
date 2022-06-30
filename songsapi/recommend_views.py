@@ -3,7 +3,6 @@ import random
 from ast import literal_eval
 
 import hazm
-import numpy as np
 
 from df.DFResponse import DFResponse
 from songsapi.ArtistEdge import ArtistEdge, Graph
