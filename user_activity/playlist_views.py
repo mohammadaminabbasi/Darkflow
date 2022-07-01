@@ -1,7 +1,9 @@
+import random
+
 from df.DFResponse import DFResponse
 from df.utils import comments_to_map, song_df_to_map
 from songsapi.models import *
-from songsapi.static_database_utils import get_df_song_by_id
+from songsapi.static_database_utils import get_df_song_by_id, get_artist
 from user_activity.models import *
 
 
@@ -41,8 +43,20 @@ def get_all_playlists_of_user(request):
             playlist_songs = []
             for song_id in playlist.songs_id:
                 playlist_songs.append(song_df_to_map(get_df_song_by_id(song_id)))
+
+            artist_images = []
+            random_choices_count = 0
+            if len(playlist_songs) >= 2:
+                random_choices_count = 2
+            elif len(playlist_songs) == 1:
+                random_choices_count = 1
+
+            for song_map in random.choices(playlist_songs, k=random_choices_count):
+                artist_images.append(get_artist(song_map["artist"][0])["image_url"])
+
             playlist_map = {"id": playlist.id,
                             "name": playlist.name,
-                            "songs": playlist_songs}
+                            "songs": playlist_songs,
+                            "artist_images": list(set(artist_images))}
             result.append(playlist_map)
     return DFResponse(data=result, is_successful=True)
