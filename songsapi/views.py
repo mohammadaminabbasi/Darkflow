@@ -72,7 +72,10 @@ def pop_popular_songs(request):
 
 def get_songs_of_artist(request):
     artist = request.GET.get('artist', None)
+    print("get_songs_of_artist")
+    print(artist)
     result = get_df_songs_of_artist(artist)
+    print(result)
     return DFResponse(data=result, is_successful=True)
 
 
