@@ -33,8 +33,8 @@ def rjartist_to_dfartist(artist: Artist):
 def song_rj_to_map(song: Song):
     song_map = {
         "id": str(song.id),
-        "title": str(convert_finglish_to_persian(song.name)),
-        "artist": str(convert_finglish_to_persian(song.artist)),
+        "title": str(song.name),
+        "artist": str(song.artist),
         "songUrl": str(song.link),
         "imageUrl": str(song.photo),
     }
@@ -44,7 +44,7 @@ def song_rj_to_map(song: Song):
 def song_df_to_map(song: DFSong):
     song_map = {
         "id": str(song.id),
-        "title": str(convert_finglish_to_persian(song.title)),
+        "title": str(song.title),
         "artist": literal_eval(song.artist),
         "songUrl": str(song.songUrl),
         "imageUrl": str(song.imageUrl),
@@ -55,7 +55,7 @@ def song_df_to_map(song: DFSong):
 def artist_to_map(artist: DFArtist):
     song_map = {
         "en_name": str(artist.name),
-        "fa_name": str(convert_finglish_to_persian(artist.name)),
+        "fa_name": str(artist.name),
         "imageUrl": str(artist.image_url),
     }
     return song_map
@@ -85,8 +85,3 @@ def song_listens_to_map(song_listens: [SongListens]):
         }
         maps.append(map)
     return maps
-
-
-def convert_finglish_to_persian(finglish: str):
-    persian = f2p(finglish).replace("فت ", "فیت ")
-    return persian
