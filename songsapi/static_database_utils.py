@@ -17,7 +17,7 @@ def get_df_song_by_id(song_id):
 def get_df_songs_of_artist(artist):
     result = []
     for song in all_songs:
-        if literal_eval(song.artist)[0]:
+        if literal_eval(song.artist)[0] == artist:
             result.append(song_df_to_map(song))
     return result
 
