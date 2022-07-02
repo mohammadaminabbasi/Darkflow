@@ -13,5 +13,5 @@ urlpatterns = [
     path('comment_song/', comment_song, name="comment_song"),
     path('get_all_song_comments/', get_all_song_comments, name="comment_song"),
     path('add_new_song_listen/', add_new_song_listen, name="add_new_song_listen"),
-    path('recommended_artists/', most_listened_artists, name="user_listen_randomly"),
+    path('liked_songs_by_user', get_all_liked_songs_by_user, name="user_listen_randomly"),
 ]

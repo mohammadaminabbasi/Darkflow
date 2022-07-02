@@ -1,6 +1,7 @@
 from df.DFResponse import DFResponse
-from df.utils import comments_to_map
+from df.utils import comments_to_map, song_df_to_map
 from songsapi.models import *
+from songsapi.static_database_utils import get_df_song_by_id
 from user_activity.models import *
 
 
@@ -56,17 +57,9 @@ def add_new_song_listen(request):
         SongListens(song_id=song_id, user_id=user_id, count=0).save()
     return DFResponse(message="Song Listens submitted", is_successful=True)
 
-
-def most_listened_artists(request):
-    result_map_list = {}
-    for song_listen_record in SongListens.objects.all():
-        artist = DFSong.objects.filter(id=song_listen_record.song_id).get().artist \
-            .replace("[", "").replace("]", "").replace("'", "")
-
-        if artist in result_map_list:
-            result_map_list[artist] = result_map_list[artist] + 1
-        else:
-            result_map_list[artist] = 1
-
-    return DFResponse(data=result_map_list, message="Song Listens submitted", is_successful=True)
-
+def get_all_liked_songs_by_user(request):
+    result = []
+    user_id = request.GET.get('user_id', None)
+    for song_Like in SongLikes.objects.filter(user_id=user_id):
+        result.append(song_df_to_map(get_df_song_by_id(song_Like.song_id)))
+    return DFResponse(data=result, message="", is_successful=True)
