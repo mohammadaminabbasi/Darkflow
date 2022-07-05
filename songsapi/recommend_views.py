@@ -2,7 +2,7 @@ import random
 from ast import literal_eval
 
 from df.DFResponse import DFResponse
-from songsapi.ArtistEdge import Graph
+from songsapi.ArtistEdge import ArtistGraph
 from songsapi.models import *
 
 from df.utils import *
@@ -71,7 +71,7 @@ def most_played_artists(user_id):
 
 
 def insert_artist_edges():
-    graph = Graph([])
+    graph = ArtistGraph([])
     all_songs = DFSong.objects.all()
     print(len([rec_data.recommends_songs_id for rec_data in RecommendedSongs.objects.all()]))
     for index, related_songs in enumerate(

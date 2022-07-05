@@ -1,11 +1,9 @@
 import re
 from ast import literal_eval
 
-from radiojavanapi import Client
 from radiojavanapi.models import Song, Artist
 
 from songsapi.models import *
-from finglish import f2p
 
 from user_activity.models import *
 
