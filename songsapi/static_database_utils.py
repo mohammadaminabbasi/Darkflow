@@ -1,5 +1,7 @@
 from ast import literal_eval
 
+from django.contrib.auth.models import User
+
 from df.utils import song_df_to_map
 from songsapi.models import DFSong, DFArtist
 
@@ -28,3 +30,11 @@ def get_artist(artist_name):
         if artist.name == artist_name:
             return {"name": artist.name, "image_url": artist.image_url}
     return None
+
+
+def get_user_id(username):
+    user_id = -1
+    users = User.objects.filter(username=username).values_list('id')
+    if len(users) >= 1:
+        user_id = list(users[0])[0]
+    return user_id

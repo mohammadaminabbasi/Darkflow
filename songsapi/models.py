@@ -10,7 +10,6 @@ class DFSong(models.Model):
     id = models.CharField(max_length=250, primary_key=True)
     title = models.CharField(max_length=1000)
     artist = models.CharField(max_length=1000, default="")
-    artist2 = ArrayField(models.CharField(max_length=250))
     songUrl = models.URLField()
     imageUrl = models.URLField()
     lyric = models.TextField(null=True)
@@ -18,16 +17,10 @@ class DFSong(models.Model):
     genre = models.CharField(max_length=100, default="")
     tokens = models.TextField(default="")
 
-    def __str__(self):
-        return self.title
-
 
 class DFArtist(models.Model):
     name = models.CharField(primary_key=True, max_length=1000)
     image_url = models.URLField()
-
-    def __str__(self):
-        return self.name
 
 
 class RecommendedSongs(models.Model):
@@ -36,17 +29,12 @@ class RecommendedSongs(models.Model):
 
 
 class SongGenre(enum.Enum):
-    hiphop = "hiphop"
     pop = "pop"
     traditional = "traditional"
 
 
 class ArtistEdge(models.Model):
     id = models.AutoField(primary_key=True)
-    artist1 = models.CharField(max_length=100, default="")
-    artist2 = models.CharField(max_length=100, default="")
+    artist1 = models.ForeignKey(DFArtist, on_delete=models.CASCADE, related_name="artist1")
+    artist2 = models.ForeignKey(DFArtist, on_delete=models.CASCADE, related_name="artist2")
     weight = models.IntegerField(default=1)
-
-    def __str__(self):
-        return f"({self.artist1}) , ({self.artist2}) , {self.weight}"
-

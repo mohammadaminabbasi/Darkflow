@@ -1,10 +1,11 @@
 from django.views.decorators.cache import cache_page
+from radiojavanapi import Client
 from rest_framework.decorators import api_view
 
 from df.DFResponse import DFResponse
 from songsapi.recommend_views import get_general_recommended_unlistened_songs, most_played_artists, \
     get_listened_playlist
-from songsapi.static_database_utils import get_df_songs_of_artist
+from songsapi.static_database_utils import get_df_songs_of_artist, get_user_id
 from songsapi.translate_utlis import *
 
 from df.utils import *
@@ -83,16 +84,17 @@ def get_songs_of_artist(request):
 # @permission_classes((IsAuthenticated,))
 @cache_page(60 * 60 * 24)  # 24 hour cache
 def get_all_home_page_data(request):
-    user_id = request.GET.get('user_id', None)
+    user_id = get_user_id(request.GET.get('user_id', None))
     result = []
-    popular_songs = all_popular_songs()
-    result.append({"type": "song", "name": translate_popular_songs, "songs": popular_songs})
-    recommended_artists = most_played_artists(user_id)
-    result.append({"type": "artist", "name": translate_rec_artists, "artists": recommended_artists})
-    recommended_songs = get_general_recommended_unlistened_songs(user_id)
-    result.append({"type": "song", "name": translate_rec_songs, "songs": recommended_songs})
-    traditional_songs = traditional_popular_songs()
-    result.append({"type": "song", "name": translate_traditional_popular_songs, "songs": traditional_songs})
-    history_playlist = get_listened_playlist(user_id)
-    result.append({"type": "song", "name": translate_history_playlist, "songs": history_playlist})
+    if user_id != -1:
+        popular_songs = all_popular_songs()
+        result.append({"type": "song", "name": translate_popular_songs, "songs": popular_songs})
+        recommended_artists = most_played_artists(user_id)
+        result.append({"type": "artist", "name": translate_rec_artists, "artists": recommended_artists})
+        recommended_songs = get_general_recommended_unlistened_songs(user_id)
+        result.append({"type": "song", "name": translate_rec_songs, "songs": recommended_songs})
+        traditional_songs = traditional_popular_songs()
+        result.append({"type": "song", "name": translate_traditional_popular_songs, "songs": traditional_songs})
+        history_playlist = get_listened_playlist(user_id)
+        result.append({"type": "song", "name": translate_history_playlist, "songs": history_playlist})
     return DFResponse(data=result, is_successful=True)

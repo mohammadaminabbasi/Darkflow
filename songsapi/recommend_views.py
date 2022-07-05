@@ -25,12 +25,14 @@ def get_listened_playlist(user_id):
     result = []
     song_listened_list = SongListens.objects.filter(user_id=user_id)
     count_listened = [song_listens.count for song_listens in song_listened_list]
-    song_listens = set(random.choices(song_listened_list, weights=tuple(count_listened), k=10))
-    for song_id in song_listens:
-        print(song_id.song_id)
-        df_song = get_df_song_by_id(song_id.song_id)
-        if df_song is not None:
-            result.append(song_df_to_map(df_song))
+    print("count_listened")
+    if len(count_listened) >= 1:
+        song_listens = set(random.choices(song_listened_list, weights=tuple(count_listened), k=10))
+        print(song_listened_list)
+        for song_id in song_listens:
+            df_song = get_df_song_by_id(song_id.song_id.id)
+            if df_song is not None:
+                result.append(song_df_to_map(df_song))
     return result
 
 
@@ -38,13 +40,15 @@ def get_general_recommended_unlistened_songs(user_id):
     rec_list = set()
     song_listened_list = SongListens.objects.filter(user_id=user_id)
     count_listened = [song_listens.count for song_listens in song_listened_list]
-    listened_playlist = set(random.choices(song_listened_list, weights=tuple(count_listened), k=10))
-    print(listened_playlist)
-    for song_listened in listened_playlist:
-        print(song_listened.song_id)
-        df_song = get_df_song_by_id(song_listened.song_id)
-        rec_songs = RecommendedSongs.objects.filter(song=df_song)[0]
-        rec_list = rec_list.union(set(random.choices(rec_songs.recommends_songs_id[1:], k=2)))
+    if len(count_listened) >= 1:
+        listened_playlist = set(random.choices(song_listened_list, weights=tuple(count_listened), k=10))
+        for song_listened in listened_playlist:
+            df_song = get_df_song_by_id(song_listened.song_id.id)
+            if df_song is None:
+                continue
+            else:
+                rec_songs = RecommendedSongs.objects.filter(song=df_song.id)[0]
+                rec_list = rec_list.union(set(random.choices(rec_songs.recommends_songs_id[1:], k=2)))
     df_songs = [song_df_to_map(get_df_song_by_id(song_id)) for song_id in rec_list]
     return df_songs
 
@@ -54,9 +58,8 @@ def most_played_artists(user_id):
     most_played_artists_list = {}
     song_listened_list = SongListens.objects.filter(user_id=user_id).order_by('count')
     for song in song_listened_list[:10]:
-        df_song = get_df_song_by_id(song.song_id)
+        df_song = get_df_song_by_id(song.song_id.id)
         artist = literal_eval(df_song.artist)[0]
-        print(artist)
 
         if artist in most_played_artists_list:
             most_played_artists_list[artist] += 1
@@ -73,7 +76,6 @@ def most_played_artists(user_id):
 def insert_artist_edges():
     graph = ArtistGraph([])
     all_songs = DFSong.objects.all()
-    print(len([rec_data.recommends_songs_id for rec_data in RecommendedSongs.objects.all()]))
     for index, related_songs in enumerate(
             [rec_data.recommends_songs_id for rec_data in RecommendedSongs.objects.all()]):
         print(f"{index}/{555}")
@@ -83,7 +85,6 @@ def insert_artist_edges():
                 artist2 = get_artist_of_song(related_songs[j], all_songs)
                 graph.add_edge(ArtistEdge(artist1=artist1, artist2=artist2, weight=1))
     for edge in graph.graph:
-        print(edge)
         if edge.weight >= 10:
             edge.save()
 

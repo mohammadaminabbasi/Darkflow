@@ -40,13 +40,15 @@ def song_rj_to_map(song: Song):
 
 
 def song_df_to_map(song: DFSong):
-    song_map = {
-        "id": str(song.id),
-        "title": str(song.title),
-        "artist": literal_eval(song.artist),
-        "songUrl": str(song.songUrl),
-        "imageUrl": str(song.imageUrl),
-    }
+    song_map = {}
+    if song is not None:
+        song_map = {
+            "id": str(song.id),
+            "title": str(song.title),
+            "artist": literal_eval(song.artist),
+            "songUrl": str(song.songUrl),
+            "imageUrl": str(song.imageUrl),
+        }
     return song_map
 
 

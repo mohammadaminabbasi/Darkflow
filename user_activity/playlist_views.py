@@ -9,9 +9,14 @@ from user_activity.models import *
 
 def new_playlist(request):
     name = request.GET.get('name', None)
-    user_id = request.GET.get('user_id', None)
-    PlayList(name=name, user_id=user_id, songs_id=[]).save()
-    return DFResponse(message="playlist created!", is_successful=True)
+    username = request.GET.get('user_id', None)
+    users = User.objects.filter(username=username)
+    if len(users) >= 1:
+        user = users[0]
+        PlayList(name=name, user_id=user, songs_id=[]).save()
+        return DFResponse(message="playlist created!", is_successful=True)
+    else:
+        return DFResponse(message="user not found!", is_successful=False)
 
 
 def add_song_to_playlist(request):
@@ -19,7 +24,8 @@ def add_song_to_playlist(request):
     playlist_id = request.GET.get('playlist_id', None)
     playlist = PlayList.objects.filter(id=playlist_id)[0]
     if song_id is not None and playlist_id is not None:
-        playlist.songs_id = list(set(playlist.songs_id.append(song_id)))
+        playlist.songs_id.append(song_id)
+        playlist.songs_id = list(set(playlist.songs_id))
         playlist.save()
     return DFResponse(message="song added to playlist!", is_successful=True)
 
@@ -37,10 +43,15 @@ def remove_song_from_playlist(request):
 
 
 def get_all_playlists_of_user(request):
-    user_id = request.GET.get('user_id', None)
+    username = request.GET.get('user_id', None)
+    users = User.objects.filter(username=username)
+    user_id = ""
+    if len(users) >= 1:
+        user_id = users[0].username
+
     result = []
     for playlist in PlayList.objects.all():
-        if playlist.user_id == user_id:
+        if str(playlist.user_id) == str(user_id):
             playlist_songs = []
             for song_id in playlist.songs_id:
                 playlist_songs.append(song_df_to_map(get_df_song_by_id(song_id)))
@@ -59,5 +70,6 @@ def get_all_playlists_of_user(request):
                             "name": playlist.name,
                             "songs": playlist_songs,
                             "artist_images": list(set(artist_images))}
+            print(playlist_map)
             result.append(playlist_map)
     return DFResponse(data=result, is_successful=True)
